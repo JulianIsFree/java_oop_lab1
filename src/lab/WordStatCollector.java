@@ -60,7 +60,7 @@ public class WordStatCollector {
             // IDEA suggested to replace StringBuilder with String, be so
             String CSVLine = pair.getKey() + "," +
                     pair.getValue().toString() + "," +
-                    (double) pair.getValue() / totalWords + "\n";
+                    100.0 * pair.getValue() / totalWords + "%" + "\n";
 
             outputStreamWriter.write(CSVLine);
         }
