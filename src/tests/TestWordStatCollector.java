@@ -63,7 +63,6 @@ public class TestWordStatCollector {
             for(Map.Entry<String, Integer> pair : wordTableCounter.entrySet()) {
                 assertEquals(expectedTable.get(pair.getKey()), pair.getValue());
             }
-            generateCSV();
         } catch (IOException ignored) {
             fail();
         }
@@ -77,12 +76,6 @@ public class TestWordStatCollector {
 
             wsc.generateCSVFile();
             TestCSVFileReader testCSVFileReader = new TestCSVFileReader(CSVFileName);
-
-//            for(Map.Entry<String, Integer> pair : expectedTable.entrySet()) {
-//                TestCSVFileReader.TestTrio trio = TestCSVFileReader.fromCSVLineToTestTrio(testCSVFileReader.getCSVLine());
-//                assertEquals(trio.first, pair.getKey());
-//                assertEquals(Integer.valueOf(trio.second), pair.getValue());
-//            }
 
             while(testCSVFileReader.ready()) {
                 TestCSVFileReader.TestTrio trio = TestCSVFileReader.fromCSVLineToTestTrio(testCSVFileReader.getCSVLine());

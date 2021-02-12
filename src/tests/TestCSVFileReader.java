@@ -20,7 +20,10 @@ public class TestCSVFileReader {
 
             this.first = csvLine.get(0);
             this.second = Integer.valueOf(csvLine.get(1));
-            this.third = Double.valueOf(csvLine.get(2));
+
+            String third = csvLine.get(2);
+            third = third.replace("%","");
+            this.third = Double.valueOf(third);
             }
     }
 
