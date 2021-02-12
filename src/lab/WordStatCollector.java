@@ -6,7 +6,7 @@ import java.util.*;
 public class WordStatCollector {
     private final String inputFileName;
     private final String outputFileName;
-    private HashMap<String, Integer> wordTableCounter;
+    private Map<String, Integer> wordTableCounter;
     private int totalWords;
 
     private static String getWord(InputStreamReader inputStreamReader) throws IOException {
@@ -39,7 +39,7 @@ public class WordStatCollector {
     public WordStatCollector(String inputFileName, String outputFileName) {
         this.inputFileName = inputFileName;
         this.outputFileName = outputFileName;
-        this.wordTableCounter = new HashMap<>();
+        this.wordTableCounter = new TreeMap<>();
         this.totalWords = 0;
     }
 
@@ -56,7 +56,10 @@ public class WordStatCollector {
     public void generateCSVFile() throws IOException {
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(outputFileName));
 
-        for(Map.Entry<String, Integer> pair : wordTableCounter.entrySet()) {
+        List<Map.Entry<String, Integer>> list = new ArrayList<>(wordTableCounter.entrySet());
+        list.sort(HashMap.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        for(Map.Entry<String, Integer> pair : list) {
             // IDEA suggested to replace StringBuilder with String, be so
             String CSVLine = pair.getKey() + "," +
                     pair.getValue().toString() + "," +
@@ -69,7 +72,16 @@ public class WordStatCollector {
     }
 
     // for tests
-    public HashMap<String, Integer> getWordTableCounter() {
+    public Map<String, Integer> getWordTableCounter() {
         return wordTableCounter;
+    }
+
+    public void setWordTableCounter(Map<String, Integer> wordTableCounter) {
+        totalWords = 0;
+        this.wordTableCounter = wordTableCounter;
+
+        for(Map.Entry<String, Integer> pair : wordTableCounter.entrySet()) {
+            totalWords += pair.getValue();
+        }
     }
 }

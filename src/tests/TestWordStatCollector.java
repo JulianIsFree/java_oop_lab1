@@ -20,26 +20,20 @@ import static org.junit.Assert.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestWordStatCollector {
 
-    private static String CSVFileName;
-    private static List<String> fileContent;
+    private static final String testFileName = "TestWordStatCollector_collectStatistic()";;
+    private static final String CSVFileName = "CSVStatistic";
+    private static List<String> fileContent = Arrays.asList("test.test#test!test test", "second Second line", "third Third line", "five five five five five");;
+
     private static HashMap<String, Integer> expectedTable;
-    private static WordStatCollector wsc;
 
     @Before
     public void initTestData() {
-
-        String testFileName = "TestWordStatCollector_collectStatistic()";
-        CSVFileName = "CSVStatistic";
-        fileContent = Arrays.asList("test.test#test!test test", "second Second line", "third Third line", "five five five five five");
-
         expectedTable = new HashMap<>();
         expectedTable.put("test", 5);
         expectedTable.put("second", 2);
         expectedTable.put("line", 2);
         expectedTable.put("third", 2);
         expectedTable.put("five", 5);
-
-        wsc = new WordStatCollector(testFileName, CSVFileName);
 
         try{
             TestFileWriter tfw = new TestFileWriter(fileContent, testFileName);
@@ -62,9 +56,10 @@ public class TestWordStatCollector {
     @Test
     public void collectStatistic() {
         try {
+            WordStatCollector wsc = new WordStatCollector(testFileName, CSVFileName);
             wsc.collectStatistic();
 
-            HashMap<String, Integer> wordTableCounter = wsc.getWordTableCounter();
+            Map<String, Integer> wordTableCounter = wsc.getWordTableCounter();
             for(Map.Entry<String, Integer> pair : wordTableCounter.entrySet()) {
                 assertEquals(expectedTable.get(pair.getKey()), pair.getValue());
             }
@@ -74,9 +69,12 @@ public class TestWordStatCollector {
         }
     }
 
-    //TODO: install JUnit5 and make order for running tests
-    private void generateCSV() {
+    @Test
+    public void generateCSV() {
         try {
+            WordStatCollector wsc = new WordStatCollector(testFileName, CSVFileName);
+            wsc.setWordTableCounter(expectedTable);
+
             wsc.generateCSVFile();
             TestCSVFileReader testCSVFileReader = new TestCSVFileReader(CSVFileName);
 
