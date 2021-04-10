@@ -7,15 +7,14 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
-public class TestCSVFileReader {
-    public final String inputFileName;
+class TestCSVFileReader {
     private BufferedReader bufferedReader;
-    public static class TestTrio {
-        public final String first;
-        public final int second;
-        public final double third;
+    static class TestTrio {
+        final String first;
+        final int second;
+        final double third;
 
-        public TestTrio(List<String> csvLine) {
+        TestTrio(List<String> csvLine) {
             assert csvLine.size() == 3;
 
             this.first = csvLine.get(0);
@@ -28,11 +27,10 @@ public class TestCSVFileReader {
     }
 
     TestCSVFileReader(String inputFileName) throws IOException{
-        this.inputFileName = inputFileName;
         this.bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(inputFileName)));
     }
 
-    public List<String> getCSVLine() throws IOException {
+    List<String> getCSVLine() throws IOException {
         List<String> line;
 
         String unseparatedLine = bufferedReader.readLine();
@@ -41,11 +39,11 @@ public class TestCSVFileReader {
         return line;
     }
 
-    public boolean ready() throws IOException{
+    boolean ready() throws IOException{
         return this.bufferedReader.ready();
     }
 
-    public static TestTrio fromCSVLineToTestTrio(List<String> splitedLine) {
+    static TestTrio fromCSVLineToTestTrio(List<String> splitedLine) {
         return new TestTrio(splitedLine);
     }
 }

@@ -10,8 +10,9 @@ import java.util.List;
 public class Tester {
     static void runTest(Class klass) {
         Result result = JUnitCore.runClasses(klass);
+        System.out.println("Failed tests: " + result.getFailureCount());
         for(Failure failure : result.getFailures()) {
-            System.out.println(failure);
+            failure.getException().printStackTrace();
         }
     }
 

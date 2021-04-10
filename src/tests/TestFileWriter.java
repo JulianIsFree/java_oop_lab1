@@ -6,8 +6,8 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 
 class TestFileWriter {
-    public final List<String> fileContent;
-    public final String outputFileName;
+    private final List<String> fileContent;
+    private final String outputFileName;
 
     TestFileWriter(List<String> fileContent, String fileName) {
         this.fileContent = fileContent;

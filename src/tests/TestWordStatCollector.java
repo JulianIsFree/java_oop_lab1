@@ -1,13 +1,11 @@
 package tests;
 
+import lab.CSVStatWriter;
 import lab.WordStatCollector;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
-
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -15,14 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestWordStatCollector {
 
-    private static final String testFileName = "TestWordStatCollector_collectStatistic()";;
+    private static final String testFileName = "TestWordStatCollector_collectStatistic()";
     private static final String CSVFileName = "CSVStatistic";
-    private static List<String> fileContent = Arrays.asList("test.test#test!test test", "second Second line", "third Third line", "five five five five five");;
+    private static List<String> fileContent = Arrays.asList("test.test#test!test test", "second Second line", "third Third line", "five five five five five");
 
     private static HashMap<String, Integer> expectedTable;
 
@@ -43,49 +39,33 @@ public class TestWordStatCollector {
         }
     }
 
-    @After
-    public void cleanTestData() {
-        fileContent.clear();
-    }
-
     @Test
     public void noAssert() {
-        assertEquals(1,1);
+        assert 1 == 1;
     }
 
     @Test
-    public void collectStatistic() {
-        try {
-            WordStatCollector wsc = new WordStatCollector(testFileName, CSVFileName);
-            wsc.collectStatistic();
-
-            Map<String, Integer> wordTableCounter = wsc.getWordTableCounter();
-            for(Map.Entry<String, Integer> pair : wordTableCounter.entrySet()) {
-                assertEquals(expectedTable.get(pair.getKey()), pair.getValue());
-            }
-        } catch (IOException ignored) {
-            fail();
+    public void collectStatistic() throws IOException {
+        WordStatCollector wsc = new WordStatCollector(testFileName);
+        Map<String, Integer> wordTableCounter = wsc.getWordTableCounter();
+        for(Map.Entry<String, Integer> pair : wordTableCounter.entrySet()) {
+            assert expectedTable.get(pair.getKey()).equals(pair.getValue());
         }
     }
 
     @Test
-    public void generateCSV() {
-        try {
-            WordStatCollector wsc = new WordStatCollector(testFileName, CSVFileName);
-            wsc.setWordTableCounter(expectedTable);
+    public void generateCSV() throws IOException {
+        WordStatCollector wsc = new WordStatCollector(testFileName);
+        wsc.setWordTableCounter(expectedTable);
 
-            wsc.generateCSVFile();
-            TestCSVFileReader testCSVFileReader = new TestCSVFileReader(CSVFileName);
+        CSVStatWriter.generateCSVFile(wsc.getWordTableCounter(), CSVFileName);
+        TestCSVFileReader testCSVFileReader = new TestCSVFileReader(CSVFileName);
 
-            while(testCSVFileReader.ready()) {
-                TestCSVFileReader.TestTrio trio = TestCSVFileReader.fromCSVLineToTestTrio(testCSVFileReader.getCSVLine());
+        while(testCSVFileReader.ready()) {
+            TestCSVFileReader.TestTrio trio = TestCSVFileReader.fromCSVLineToTestTrio(testCSVFileReader.getCSVLine());
 
-                int expectedFrequency = expectedTable.get(trio.first);
-                assertEquals(expectedFrequency, trio.second);
-            }
-
-        } catch (IOException ignored) {
-            fail();
+            int expectedFrequency = expectedTable.get(trio.first);
+            assert expectedFrequency == trio.second;
         }
     }
 }
